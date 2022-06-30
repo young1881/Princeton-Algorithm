@@ -1,20 +1,18 @@
-import java.util.*;
-import edu.princeton.cs.introcs.StdRandom;
+import edu.princeton.cs.algs4.StdIn;
+import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.StdRandom;
 
 public class RandomWord {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        Scanner line = new Scanner(scanner.nextLine());
-
         int i = 0;
         String champion = null;
-        while (line.hasNext()) {
-            String tmp = line.next();
+        while (!StdIn.isEmpty()) {
+            String s = StdIn.readString();
             i++;
-            if(i==1 || StdRandom.bernoulli(1/(double) i)){
-                champion = tmp;
+            if(StdRandom.bernoulli(1/(double) i)){
+                champion = s;
             }
         }
-        System.out.println(champion);
+        StdOut.println(champion);
     }
 }
