@@ -12,19 +12,19 @@ public class Percolation {
     // creates n-by-n grid, with all sites initially blocked
     public Percolation(int n) {
         this.n = n;
-
-        state = new boolean[n * n];
-        for (int i = 0; i < n * n; i++) {
+        state = new boolean[n * n + 1];
+        // state[0] represents the state of top, which is always open.
+        state[0] = true;
+        for (int i = 0; i < n * n + 1; i++) {
             state[i] = false;
         }
         openSites = 0;
-
         uf = new WeightedQuickUnionUF(n * n + 2);
         top = 0;
         bottom = n * n + 1;
     }
 
-    // returns the index by row and col
+    // returns the index by row and col, index is supposed to between 1 and n*n
     private int index(int row, int col) {
         if (row < 1 || row > n) {
             throw new IndexOutOfBoundsException("Row is out of bounds.");
@@ -32,7 +32,7 @@ public class Percolation {
         if (col < 1 || col > n) {
             throw new IndexOutOfBoundsException("Column is out of bounds.");
         }
-        return (row - 1) * n + col - 1;
+        return (row - 1) * n + col;
     }
 
     // connects the neighbors of this row and col
@@ -68,7 +68,10 @@ public class Percolation {
 
     // is the site (row, col) full?
     public boolean isFull(int row, int col) {
-        return uf.find(index(row, col)) == uf.find(top);
+        int index = index(row, col);
+        int findIndex = uf.find(index);
+        int topIndex = uf.find(top);
+        return findIndex == topIndex;
     }
 
     // returns the number of open sites
@@ -77,12 +80,16 @@ public class Percolation {
     }
 
     // does the system percolate?
-    public boolean percolates(){
+    public boolean percolates() {
         return uf.find(bottom) == uf.find(top);
     }
 
     // test client (optional)
-    public static void main(String[] args){
-        System.out.println("Run PercolationStats!");
+    public static void main(String[] args) {
+        Percolation perc = new Percolation(3);
+        perc.open(1, 3);
+        perc.open(2, 3);
+        perc.open(3, 3);
+        perc.open(3, 1);
     }
 }
