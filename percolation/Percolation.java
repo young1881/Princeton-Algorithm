@@ -5,9 +5,8 @@ public class Percolation {
     private final boolean[] state;
     private final int n;
     private final WeightedQuickUnionUF uf;
-    private final WeightedQuickUnionUF backwash;
     private final int top;
-    private final int bottom;
+    private final boolean[] connectedToBottom;
     private int openSites;
 
     // creates n-by-n grid, with all sites initially blocked
@@ -24,10 +23,18 @@ public class Percolation {
             state[i] = false;
         }
         openSites = 0;
-        uf = new WeightedQuickUnionUF(n * n + 2);
-        backwash = new WeightedQuickUnionUF(n * n + 2);
+        uf = new WeightedQuickUnionUF(n * n + 1);
         top = 0;
-        bottom = n * n + 1;
+
+        /*
+            To avoid backwash, we use an array connectedToBottom to denotes the connection between
+            bottom and the sites of n-th row.
+            for index of [n^2-n+1, n^2], they correspond to connectedToBottom of index[1,n]
+         */
+        connectedToBottom = new boolean[n + 1];
+        for (int i = 0; i < n + 1; i++) {
+            connectedToBottom[i] = false;
+        }
     }
 
     // returns the index by row and col, index is supposed to between 1 and n*n
@@ -47,22 +54,24 @@ public class Percolation {
             int index1 = index(rowA, colA);
             int index2 = index(rowB, colB);
             uf.union(index1, index2);
-            backwash.union(index1, index2);
         }
     }
 
     // opens the site (row, col) if it is not open already
     public void open(int row, int col) {
         int thisIndex = index(row, col);
-        state[thisIndex] = true;
-        openSites++;
+        // for fear of open site repeatedly
+        if (!state[thisIndex]) {
+            state[thisIndex] = true;
+            openSites++;
+        }
 
         if (row == 1) {
             uf.union(thisIndex, top);
-            backwash.union(thisIndex, top);
         }
         if (row == n) {
-            backwash.union(thisIndex, bottom);
+//            uf.union(thisIndex, bottom);  // if we use this line, backwash problem shall arise!
+            connectedToBottom[thisIndex - n * n + n] = true;
         }
 
         connect(row, col, row + 1, col);
@@ -79,6 +88,10 @@ public class Percolation {
     // is the site (row, col) full?
     public boolean isFull(int row, int col) {
         int index = index(row, col);
+        return isFull(index);
+    }
+
+    private boolean isFull(int index) {
         int findIndex = uf.find(index);
         int topIndex = uf.find(top);
         return findIndex == topIndex;
@@ -91,7 +104,12 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates() {
-        return backwash.find(bottom) == backwash.find(top);
+        for (int i = 1; i <= n; i++) {
+            if (connectedToBottom[i] && isFull(i + n * n - n)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // test client (optional)
@@ -99,7 +117,9 @@ public class Percolation {
         Percolation perc = new Percolation(3);
         perc.open(1, 3);
         perc.open(2, 3);
+        System.out.println("percolation state: " + perc.percolates());
         perc.open(3, 3);
+        System.out.println("percolation state: " + perc.percolates());
         perc.open(3, 1);
         System.out.println("full state of (3,1): " + perc.isFull(3, 1));
     }
