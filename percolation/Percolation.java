@@ -54,10 +54,10 @@ public class Percolation {
     // opens the site (row, col) if it is not open already
     public void open(int row, int col) {
         int thisIndex = index(row, col);
-        if (!state[thisIndex]) {
-            state[thisIndex] = true;
-            openSites++;
-        }
+        if (state[thisIndex]) return;
+
+        state[thisIndex] = true;
+        openSites++;
 
         if (row == 1) {
             uf.union(thisIndex, top);
