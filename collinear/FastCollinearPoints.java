@@ -5,32 +5,43 @@ import edu.princeton.cs.algs4.StdDraw;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-public class BruteCollinearPoints {
+public class FastCollinearPoints {
 
     private final LinkedList<LineSegment> collinearLineSegments = new LinkedList<>();
 
     // finds all line segments containing 4 points
-    public BruteCollinearPoints(Point[] points) {
+    public FastCollinearPoints(Point[] points) {
         checkNull(points);
         checkDuplicated(points);
 
         int len = points.length;
-
         if (len <= 3) return;
-        Point[] tmp = Arrays.copyOf(points, len);
-        Arrays.sort(tmp);
 
-        for (int i = 0; i < len; i++) {
-            for (int j = i + 1; j < len; j++) {
-                for (int k = j + 1; k < len; k++) {
-                    for (int h = k + 1; h < len; h++) {
-                        double s1 = tmp[i].slopeTo(tmp[j]);
-                        double s2 = tmp[i].slopeTo(tmp[k]);
-                        double s3 = tmp[i].slopeTo(tmp[h]);
-                        if (s1 == s2 && s1 == s3) {
-                            collinearLineSegments.addLast(new LineSegment(tmp[i], tmp[h]));
-                        }
-                    }
+        Point[] pointsClone = points.clone();
+        Arrays.sort(pointsClone);
+
+        // Think of p as the origin
+        for (Point p : pointsClone) {
+            // For each other point q, determine the slope it makes with p.
+            Point[] sortBySlope = pointsClone.clone();
+            // Sort the points according to the slopes they make with p.
+            Arrays.sort(sortBySlope, p.slopeOrder());
+
+            // Check if any 3 (or more) adjacent points in the sorted order
+            // have equal slopes with respect to p.
+            // If so, these points, together with p, are collinear.
+            int i = 0;
+
+            while (i < len) {
+                LinkedList<Point> adjacentPoints = new LinkedList<>();
+                double slopeRef = p.slopeTo(sortBySlope[i]);
+                do {
+                    adjacentPoints.addLast(sortBySlope[i]);
+                    i++;
+                } while (i < len && p.slopeTo(sortBySlope[i]) == slopeRef);
+                if (adjacentPoints.size() >= 3 && p.compareTo(adjacentPoints.removeFirst()) < 0) {
+                    LineSegment pCollinear = new LineSegment(p, adjacentPoints.removeLast());
+                    collinearLineSegments.addLast(pCollinear);
                 }
             }
         }
@@ -94,7 +105,7 @@ public class BruteCollinearPoints {
         StdDraw.show();
 
         // print and draw the line segments
-        BruteCollinearPoints collinear = new BruteCollinearPoints(points);
+        FastCollinearPoints collinear = new FastCollinearPoints(points);
         for (LineSegment segment : collinear.segments()) {
             StdOut.println(segment);
             segment.draw();
