@@ -24,4 +24,17 @@ More advanced way will be to maintain additional state with each site (using sin
 
 **Points**: Use `Double.POSITIVE_INFINITY` & `Double.NEGATIVE_INFINITY` to describe $+\infty$ & $-\infty$
 
-**FastCollinearPoints**: How to avoid duplicating segment? One simple way is to order the Points array and check the order of adjacent points to ensure we find collinear points in order: consider we go through the ordered coloned Points array $\{p_n\}$, since the iterator variant $p$ is ordered by the comparator of `Points`, it will cause a negative comparison result if we find the collinear points $p_i$ of $p_j$  where $i<j$.
+**FastCollinearPoints**: How to avoid duplicating segment? One simple way is to order the Points array and check the order of adjacent points to ensure we find collinear points in order: consider we go through the ordered coloned Points array $\{p_n\}$, since the iterator variant $p$ is ordered by the comparator of `Points`, it will cause a negative comparison result if we find the collinear points $p_i$ of $p_j$ where $i<j\ (p_i<p_j)$ .
+
+### Week 4: [8 Puzzles](https://coursera.cs.princeton.edu/algs4/assignments/8puzzle/specification.php)
+
+**Twin**: By the parity of inversed pairs (e.g if the tiles are arranged like this:
+
+| 1 | 2 | 3 |
+|---|---|---|
+| 4 | 5 | 8 |
+| 6 | 7 | 0 |
+
+then we have the inversed pairs $(8,6)$, $(8,7)$. If the number of inversed pairs is even, then we the puzzle is solvable, vice versa. This can be easily proved if you know permutation group), we know that the twin board has the opposite parity of inversed pairs. Thus, one of them must be solvable. Since we are not supposed to write functions to calculate the inversed pairs of the initial board, we just try to find the solution of both the origin one and the twin one and finally we just need to check from which one we get the solution.
+
+**Time Performance**: I had stuck in the time performance for a while until I find that I put the mahattan algorithm the `manhattan` function and the `Solver.java` just get through it every time it has to compare. The solution to this is that to calcute the manhattan distance in the Board Builder and put it into a variant in class `Board` and `SearchNode`.
