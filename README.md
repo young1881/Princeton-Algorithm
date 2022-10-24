@@ -41,3 +41,6 @@ then we have the inversed pairs $(8,6)$, $(8,7)$. If the number of inversed pair
 
 ### [Kdtree](https://coursera.cs.princeton.edu/algs4/assignments/kdtree/specification.php)
 Three seems to be some bugs in the autotest... especially when using `range()` and `nearest()`. The points supposed to be counted are sometimes get expelled...
+
+### [WordNet](https://coursera.cs.princeton.edu/algs4/assignments/wordnet/specification.php)
+Note that the class `DepthFirstDirectedGraph` in the algs4.jar does not have a `distTo()` function while `BreathFirstDirectedGraph` does. Remember to use classes `DirectedCycle` to check if graph has cycles or `Topological` to check DAG.
