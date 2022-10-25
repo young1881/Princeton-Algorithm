@@ -44,3 +44,10 @@ Three seems to be some bugs in the autotest... especially when using `range()` a
 
 ### [WordNet](https://coursera.cs.princeton.edu/algs4/assignments/wordnet/specification.php)
 Note that the class `DepthFirstDirectedGraph` in the algs4.jar does not have a `distTo()` function while `BreathFirstDirectedGraph` does. Remember to use classes `DirectedCycle` to check if graph has cycles or `Topological` to check DAG.
+
+### [Seam Carving](https://coursera.cs.princeton.edu/algs4/assignments/seam/specification.php)
+This is a simplifies algorithm of "smart" graph resizing without any machine learning! Fabulous!
+
+Remember to check that client can mutate the Picture object that is passed to the constructor and that is returned by picture(), this may lead to 99/100.
+
+A little bit imagination of matrice transpose may simplify codes a lot when it comes to converting `horizontal` to `vertical`.
