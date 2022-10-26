@@ -51,3 +51,6 @@ This is a simplifies algorithm of "smart" graph resizing without any machine lea
 Remember to check that client can mutate the Picture object that is passed to the constructor and that is returned by picture(), this may lead to 99/100.
 
 A little bit imagination of matrice transpose may simplify codes a lot when it comes to converting `horizontal` to `vertical`.
+
+### [Baseball Elimination](https://coursera.cs.princeton.edu/algs4/assignments/baseball/specification.php)
+**The use of `mincut`**: no full forward means $s$ to games edges with nonzero residual capacity. If we traverse further from games vertices to team vertices, the edges have positive infinite capacity, so the teams which non zero remaining games have a non empty backward capacity, so they are also included in the mincut. The last layer $t$, has all its capacity filled so it has a empty capacity in backward direction, and has no forward edges. 
